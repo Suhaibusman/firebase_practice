@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
   }
-
+  bool isPassVisible =false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -110,7 +110,11 @@ class _LoginScreenState extends State<LoginScreen> {
                            ),
                          ),
                         const SizedBox(height: 10,),
-                      CustomTextField(textFieldController: password, isPass: true),
+                      CustomTextField(textFieldController: password, isPass: isPassVisible, textFieldIcon: IconButton(onPressed: (){
+                    setState(() {
+                      isPassVisible =!isPassVisible;
+                    });
+                   }, icon: const Icon(Icons.remove_red_eye_outlined))),
               const SizedBox(height: 20,),
             InkWell(
                     onTap: () {

@@ -19,7 +19,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
    TextEditingController userName =TextEditingController();
  
  Future registerUser() async {
-   try {
+  if (isAgree == false) {
+    showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      title: const Text("Please agree to Privacy and Policy and User Agreement below"),
+      
+      actions: [
+        TextButton(onPressed: (){
+          Navigator.pop(context);
+        }, child: const Text("Ok"))
+      ],
+    );
+  },);
+  }
+   else{
+    try {
    await FirebaseAuth.instance.createUserWithEmailAndPassword(
     email: emailAddress.text,
     password: password.text,
@@ -37,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   },);
 } on FirebaseAuthException catch (e) {
-  String errorMessage ="An error Occured";
+  String errorMessage ="Please Enter Username And Password";
   if (e.code == 'weak-password') {
     errorMessage='The password provided is too weak.';
   } else if (e.code == 'email-already-in-use') {
@@ -66,8 +80,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   print(e);
 
 }
+   }
  }
  bool isAgree =false;
+ bool isPassVisible =false;
   @override
 
   Widget build(BuildContext context) {
@@ -106,7 +122,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 20,),
                       CustomTextField(textFieldController: emailAddress, hintText: "Enter Email"),
                     const SizedBox(height: 20,),
-                   CustomTextField(textFieldController: password, hintText: "Enter Password" , isPass: true),
+                   CustomTextField(textFieldController: password, hintText: "Enter Password" , isPass: isPassVisible, textFieldIcon: IconButton(onPressed: (){
+                    setState(() {
+                      isPassVisible =!isPassVisible;
+                    });
+                   }, icon: const Icon(Icons.remove_red_eye_outlined))),
                  
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
