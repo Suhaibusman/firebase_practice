@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_practice/functions/firebasefunction.dart';
 import 'package:firebase_practice/screen/homepage.dart';
 import 'package:firebase_practice/screen/signuppage.dart';
 import 'package:firebase_practice/widgets/buttonwidget.dart';
@@ -17,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailAddress = TextEditingController();
   TextEditingController password = TextEditingController();
-
+  FireBaseFunction fireBaseFunctions = FireBaseFunction();
   Future<void> loginUser() async {
     try {
       final UserCredential userCredential = await FirebaseAuth.instance
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
   }
-  bool isPassVisible =false;
+  bool isPassVisible =true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -83,7 +84,11 @@ class _LoginScreenState extends State<LoginScreen> {
                  const TextWidget(textMessage: "Log in to Shh!", textColor: Colors.white, textSize: 40),
                       
                       const SizedBox(height: 40,),
-                       CustomButtonWidget(imageAddress: "assets/images/googlelogo.png", bgColor: Colors.black, textMessage: "Sign up with Google", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.8,),
+                       InkWell(
+                        onTap: () {
+                         fireBaseFunctions.signInWithGoogle(); 
+                        },
+                        child: CustomButtonWidget(imageAddress: "assets/images/googlelogo.png", bgColor: Colors.black, textMessage: "Sign in with Google", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.8,)),
                     const SizedBox(height: 40,),
                      Image.asset("assets/images/continuewithEmail.png"),
                       const SizedBox(height: 40,),

@@ -83,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
    }
  }
  bool isAgree =false;
- bool isPassVisible =false;
+ bool isPassVisible =true;
   @override
 
   Widget build(BuildContext context) {
