@@ -19,6 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     email: emailAddress.text,
     password: password.text,
   );
+  // ignore: use_build_context_synchronously
   showDialog(context: context, builder: (context) {
     return AlertDialog(
       title: const Text("Sign up Succesfull"),
@@ -56,6 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
       );
 } catch (e) {
+  // ignore: avoid_print
   print(e);
 
 }
