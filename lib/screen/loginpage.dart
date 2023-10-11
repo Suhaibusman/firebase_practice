@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practice/screen/homepage.dart';
 import 'package:firebase_practice/screen/signuppage.dart';
+import 'package:firebase_practice/widgets/buttonwidget.dart';
+import 'package:firebase_practice/widgets/textfieldwidget.dart';
+import 'package:firebase_practice/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
+  // ignore: use_key_in_widget_constructors
   const LoginScreen({Key? key});
 
   @override
@@ -62,74 +66,87 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child:  Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const Text(
-                "Login Page",
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  const Text(
-                    "Username",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: emailAddress,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Username",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+        body: Container(
+           height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+         decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/loginScreenImage.png"),
+          fit: BoxFit.cover,
+        ),
+    
+        ),
+          child: SizedBox(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 const TextWidget(textMessage: "Log in to Shh!", textColor: Colors.white, textSize: 40),
+                      
+                      const SizedBox(height: 40,),
+                       CustomButtonWidget(imageAddress: "assets/images/googlelogo.png", bgColor: Colors.black, textMessage: "Sign up with Google", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.8,),
+                    const SizedBox(height: 40,),
+                     Image.asset("assets/images/continuewithEmail.png"),
+                      const SizedBox(height: 40,),
+                         const Padding(
+                           padding: EdgeInsets.only(left:50),
+                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                             children: [
+                               TextWidget(textMessage: "Username or Email", textColor: Colors.black, textSize: 15),
+                             ],
+                           ),
+                         ),
+                        const SizedBox(height: 10,),
+                      CustomTextField(textFieldController: emailAddress,),
+                         const SizedBox(height: 20,),
+                         const Padding(
+                           padding: EdgeInsets.only(left:50 , right: 50),
+                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               TextWidget(textMessage: "Password", textColor: Colors.black, textSize: 15),
+                               TextWidget(textMessage: "Forgot", textColor: Colors.black, textSize: 15),
+                             ],
+                           ),
+                         ),
+                        const SizedBox(height: 10,),
+                      CustomTextField(textFieldController: password,),
               const SizedBox(height: 20,),
-              Row(
-                children: [
-                  const Text(
-                    "Password",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: password,
-                      obscureText: true, // Hide the password input
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Password",
+            InkWell(
+                    onTap: () {
+                        loginUser();
+                    },
+                    child: CustomButtonWidget( bgColor: Colors.black, textMessage: "Login", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.4,)),
+              
+                const SizedBox(height: 50,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                           const TextWidget(textMessage: "Don’t have an account?", textColor: Colors.white, textSize: 20),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUpScreen(),
+                            ),
+                          );
+                        },
+                        child: const TextWidget(textMessage: "Sign up", textColor: Colors.black, textSize: 20),
+
+                      ),
+                       const SizedBox(height: 50,),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  loginUser();
-                },
-                child: const Text("Login"),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignUpScreen(),
-                    ),
-                  );
-                },
-                child: const Text("Do You Want to Create an Account"),
-              ),
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
