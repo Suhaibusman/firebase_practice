@@ -6,6 +6,7 @@ import 'package:firebase_practice/widgets/buttonwidget.dart';
 import 'package:firebase_practice/widgets/textfieldwidget.dart';
 import 'package:firebase_practice/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   // ignore: use_key_in_widget_constructors
@@ -19,6 +20,36 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailAddress = TextEditingController();
   TextEditingController password = TextEditingController();
   FireBaseFunction fireBaseFunctions = FireBaseFunction();
+  
+Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+       // ignore: use_build_context_synchronously
+       Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+      
+    } catch (e) {
+      // Handle any errors that may occur during sign-in
+      print('Error signing in with Google: $e');
+      return null;
+    }
+  }
+
+  
   Future<void> loginUser() async {
     try {
       final UserCredential userCredential = await FirebaseAuth.instance
@@ -67,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child:  Scaffold(
+        resizeToAvoidBottomInset : false,
         body: Container(
            height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -86,7 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 40,),
                        InkWell(
                         onTap: () {
-                         fireBaseFunctions.signInWithGoogle(); 
+                        //  fireBaseFunctions.signInWithGoogle();
+                          signInWithGoogle();
                         },
                         child: CustomButtonWidget(imageAddress: "assets/images/googlelogo.png", bgColor: Colors.black, textMessage: "Sign in with Google", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.8,)),
                     const SizedBox(height: 40,),

@@ -89,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-         
+         resizeToAvoidBottomInset : false,
         body: Container(
           
           height: MediaQuery.of(context).size.height,

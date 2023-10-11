@@ -18,6 +18,7 @@ class FireBaseFunction {
 
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
+      
     } catch (e) {
       // Handle any errors that may occur during sign-in
       print('Error signing in with Google: $e');
