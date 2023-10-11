@@ -1,4 +1,6 @@
 
+import 'package:firebase_practice/screen/signuppage.dart';
+import 'package:firebase_practice/widgets/buttonwidget.dart';
 import 'package:firebase_practice/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 
@@ -24,15 +26,45 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
     
           ),
-        child: const Padding(
-          padding: EdgeInsets.all(20),
+        child:  Padding(
+          padding: const EdgeInsets.all(20),
           child: Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextWidget(textMessage: "Welcome To", textColor: Colors.white, textSize: 40),
-              TextWidget(textMessage: "Shh!", textColor: Colors.white, textSize: 40),
-              TextWidget(textMessage: "A Hub Where Whispers Echo Loudest", textColor: Colors.black, textSize: 20)
+              const SizedBox(
+                child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextWidget(textMessage: "Welcome To", textColor: Colors.white, textSize: 40),
+                    TextWidget(textMessage: "Shh!", textColor: Colors.white, textSize: 40),
+                    SizedBox(height : 20),
+                    TextWidget(textMessage: "A Hub Where Whispers Echo Loudest", textColor: Colors.black, textSize: 20 , textHeight: 2,)
+                  
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.45,
+              ),
             
+              SizedBox(child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder:  (context) => const SignUpScreen(),));
+                    },
+                    child: CustomButtonWidget( bgColor: Colors.black, textMessage: "Sign up", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.7,)),
+                const SizedBox(height: 10,),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextWidget(textMessage: "Already Have an Account?", textColor: Colors.white, textSize: 15),
+                TextWidget(textMessage: "Login", textColor: Colors.black, textSize: 15),
+              ],
+            )
+                ],
+              ))
+           
             ],
           ),
         ),

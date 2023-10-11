@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practice/screen/loginpage.dart';
+import 'package:firebase_practice/widgets/buttonwidget.dart';
+import 'package:firebase_practice/widgets/textfieldwidget.dart';
+import 'package:firebase_practice/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -12,6 +15,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
    TextEditingController emailAddress =TextEditingController();
    TextEditingController password =TextEditingController();
+   TextEditingController name =TextEditingController();
+   TextEditingController userName =TextEditingController();
  
  Future registerUser() async {
    try {
@@ -66,116 +71,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
 
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-         
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-           
-            children: [
-              
-              const Text("Sign Up Page" ,style: TextStyle(fontSize: 50 , fontWeight: FontWeight.bold),) ,
-                  
-                  const SizedBox(height: 20,),
-                  const Row(
-                children: [
-                  Text("Name",style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),),
-                 SizedBox(width: 20,),
-                  Expanded(
-                    child: TextField(
-                      // controller: emailAddress,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Name",
-                      ),
-                    ),
-                  ),
-            
-                ],
-              ),
-              const SizedBox(height: 20,),
-                   const Row(
-                children: [
-                  Text("Phone Number",style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),),
-                 SizedBox(width: 20,),
-                  Expanded(
-                    child: TextField(
-                      // controller: emailAddress,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Phone Number",
-                      ),
-                    ),
-                  ),
-            
-                ],
-              ), 
-              const SizedBox(height: 20,),
-                  const Row(
-                children: [
-                  Text("Address",style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),),
-                 SizedBox(width: 20,),
-                  Expanded(
-                    child: TextField(
-                      // controller: emailAddress,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Address",
-                      ),
-                    ),
-                  ),
-            
-                ],
-              ),
-                const SizedBox(height: 20,),
-                Row(
-                children: [
-                  const Text("Username",style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),),
-                 const SizedBox(width: 20,),
-                  Expanded(
-                    child: TextField(
-                      controller: emailAddress,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Username",
-                      ),
-                    ),
-                  ),
-            
-                ],
-              ),
-              const SizedBox(height: 20,),
-                Row(
-                children: [
-                  const Text("Password",style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),),
-                  const SizedBox(width: 20,),
-                  Expanded(
-                    child: TextField(
-                      controller: password,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter Password",
-                      ),
-                    ),
-                  ),
-            
-                ],
+    return Scaffold(
+       
+      body: Container(
         
-        
-              ),
-const SizedBox(height: 20,),
-              ElevatedButton(onPressed: ()  {
-                  registerUser();
-              }, child: const Text("Sign Up")),
-       const SizedBox(height: 20,),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+         decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/homeScreenImage.png"),
+          fit: BoxFit.cover,
+        ),
+    
+        ),
+        child: Column(
+         mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            
+               const TextWidget(textMessage: "Sign up to Shh!", textColor: Colors.white, textSize: 40),
+                
+                const SizedBox(height: 40,),
+                 CustomButtonWidget(imageAddress: "assets/images/googlelogo.png", bgColor: Colors.black, textMessage: "Sign up with Google", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.8,),
+                const SizedBox(height: 40,),
+                CustomTextField(textFieldController: name, hintText: "Enter Your Name"),
+                
+            const SizedBox(height: 20,),
+             CustomTextField(textFieldController: userName, hintText: "Enter Your Username"),
+            const SizedBox(height: 20,),
+                CustomTextField(textFieldController: emailAddress, hintText: "Enter Email"),
+              const SizedBox(height: 20,),
+             CustomTextField(textFieldController: name, hintText: "Enter Password"),
+            const SizedBox(height: 20,),
+            
+      const SizedBox(height: 20,),
+
+            ElevatedButton(onPressed: ()  {
+                registerUser();
+            }, child: const Text("Sign Up")),
+             const SizedBox(height: 20,),
         InkWell(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
-          },
-          child: const Text("Already Have An Account?")),
-            ],
-          ),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+        },
+        child: const Text("Already Have An Account?")),
+          ],
         ),
       ),
     );
