@@ -106,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 20,),
                       CustomTextField(textFieldController: emailAddress, hintText: "Enter Email"),
                     const SizedBox(height: 20,),
-                   CustomTextField(textFieldController: password, hintText: "Enter Password"),
+                   CustomTextField(textFieldController: password, hintText: "Enter Password" , isPass: true),
                  
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

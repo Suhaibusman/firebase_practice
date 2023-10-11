@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                            ),
                          ),
                         const SizedBox(height: 10,),
-                      CustomTextField(textFieldController: password,),
+                      CustomTextField(textFieldController: password, isPass: true),
               const SizedBox(height: 20,),
             InkWell(
                     onTap: () {
