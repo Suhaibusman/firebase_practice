@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_practice/functions/firebasefunction.dart';
 import 'package:firebase_practice/screen/loginpage.dart';
 import 'package:firebase_practice/widgets/buttonwidget.dart';
 import 'package:firebase_practice/widgets/textfieldwidget.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_practice/widgets/textwidget.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
+  
   const SignUpScreen({super.key});
 
   @override
@@ -13,11 +15,44 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
    TextEditingController emailAddress =TextEditingController();
    TextEditingController password =TextEditingController();
    TextEditingController name =TextEditingController();
    TextEditingController userName =TextEditingController();
- 
+
+  late FireBaseFunction firebaseFunction;
+
+  @override
+  void initState() {
+    firebaseFunction = FireBaseFunction(emailAddress.text, password.text, name.text, userName.text);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailAddress.dispose();
+    password.dispose();
+    name.dispose();
+    userName.dispose();
+    super.dispose();
+  }
+
+  void addUserToFirestore() {
+    // Update the values in the FireBaseFunction instance
+    firebaseFunction.email = emailAddress.text;
+    firebaseFunction.password = password.text;
+    firebaseFunction.name = name.text;
+    firebaseFunction.address = userName.text;
+
+    // Call the addUser method to add a new user to Firestore
+    firebaseFunction.addUser().then((_) {
+      print('User added successfully');
+    }).catchError((error) {
+      print('Failed to add user: $error');
+    });
+  }
+
  Future registerUser() async {
   if (isAgree == false) {
     showDialog(context: context, builder: (context) {
@@ -156,7 +191,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               children: [
                                 InkWell(
                       onTap: () {
-                        registerUser();
+                       addUserToFirestore();
+                       // registerUser();
                       },
                       child: CustomButtonWidget( bgColor: Colors.black, textMessage: "Create Account", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.5,)),
                             

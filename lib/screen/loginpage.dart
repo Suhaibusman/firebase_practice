@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_practice/functions/firebasefunction.dart';
 import 'package:firebase_practice/screen/homepage.dart';
 import 'package:firebase_practice/screen/signuppage.dart';
 import 'package:firebase_practice/widgets/buttonwidget.dart';
@@ -19,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailAddress = TextEditingController();
   TextEditingController password = TextEditingController();
-  FireBaseFunction fireBaseFunctions = FireBaseFunction();
+  
   
 Future<UserCredential?> signInWithGoogle() async {
     try {
