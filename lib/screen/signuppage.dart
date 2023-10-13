@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practice/screen/loginpage.dart';
@@ -24,9 +25,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
    TextEditingController userName =TextEditingController();
 
   
-  void addUsers(){
+  void addUsers(credential){
     FirebaseFirestore.instance.collection("users").add(
       {
+        "id" : credential.user.uid,
         "name" : name.text,
         "password" : password.text,
     "userName" : userName.text,
@@ -54,11 +56,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
    else{
     try {
-   await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
     email: emailAddress.text,
     password: password.text,
   );
-  addUsers();
+   FirebaseFirestore.instance.collection("users").add(
+      {
+        "id" : credential.user!.uid,
+        "name" : name.text,
+        "password" : password.text,
+    "userName" : userName.text,
+    "emailAddress" : emailAddress.text
+      }
+    ).then((value) => print("Added")).onError((error, stackTrace) => print("error"));
   // ignore: use_build_context_synchronously
   showDialog(context: context, builder: (context) {
     return AlertDialog(

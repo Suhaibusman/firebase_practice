@@ -15,23 +15,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final userId = "users/id";
   final Stream<QuerySnapshot> usersStream =
       FirebaseFirestore.instance.collection('users').snapshots();
   TextEditingController emailAddress =TextEditingController();
    TextEditingController password =TextEditingController();
    TextEditingController name =TextEditingController();
    TextEditingController userName =TextEditingController();
-void addUsers(){
-    FirebaseFirestore.instance.collection("users").add(
-      {
-        "name" : "name.text",
-        "password" : "password.text",
-    "userName" : "userName.text",
-    "emailAddress" : "emailAddress.text"
-      }
-    ).then((value) => print("Added")).onError((error, stackTrace) => print("error"));
-  }
+Future<void> addTask(String userId) async {
+  final userDocRef = FirebaseFirestore.instance.collection("user").doc(userId);
+  final userDocSnapshot = await userDocRef.get();
 
+  if (userDocSnapshot.exists) {
+    // The user document exists, so you can add a task to it.
+    final tasksCollection = userDocRef.collection("tasks");
+    final taskData = {
+      "name": "name.text",
+      "password": "password.text",
+      "userName": "userName.text",
+      "emailAddress": "emailAddress.text",
+    };
+
+    tasksCollection.add(taskData).then((value) {
+      print("Task added for user: $userId");
+    }).catchError((error) {
+      print("Error adding task: $error");
+    });
+  } else {
+    print("User document with ID $userId does not exist.");
+  }
+}
 
 void updateUsernameAndPass(DocumentSnapshot doc) {
   final nameController = TextEditingController(text: doc['name']);
@@ -147,7 +160,7 @@ void updateUsernameAndPass(DocumentSnapshot doc) {
             },
           ),
           FloatingActionButton(onPressed: (){
-            addUsers();
+            addTask(userId);
           }, child: const Icon(Icons.add),)
         ],
       ),
