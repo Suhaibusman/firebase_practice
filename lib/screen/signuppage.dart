@@ -28,6 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     firebaseFunction = FireBaseFunction(emailAddress.text, password.text, name.text, userName.text);
     super.initState();
   }
+  
 
   @override
   void dispose() {
@@ -66,6 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   },);
+ 
   }
    else{
     try {
