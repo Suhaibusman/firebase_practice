@@ -43,6 +43,7 @@ Future<UserCredential?> signInWithGoogle() async {
       
     } catch (e) {
       // Handle any errors that may occur during sign-in
+      // ignore: avoid_print
       print('Error signing in with Google: $e');
       return null;
     }

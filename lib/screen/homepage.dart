@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practice/screen/loginpage.dart';
@@ -8,6 +10,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -29,54 +32,56 @@ void addUsers(){
     ).then((value) => print("Added")).onError((error, stackTrace) => print("error"));
   }
 
-void updateUsernameAndPass(DocumentSnapshot doc){
- final nameController = TextEditingController(text: doc['name']);
-      final emailAddressController = TextEditingController(text: doc['emailAddress']);
-showDialog(context: context, builder: (context) {
-  return AlertDialog(
-    title: Text("Update"),
-    content : Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-          Row(
-  children: [
-    const Text("Name:") ,
-    Expanded(child: CustomTextField(textFieldController: name , )),
-  ],
-),
-Row(
-  children: [
-    const Text("Email:") ,
-    Expanded(child: CustomTextField(textFieldController: emailAddress ,)),
-  ],
-)
-      ],
-    ),
-    actions: [
-     ElevatedButton(
-  onPressed: () {
-    // Update the document in Firestore
-    FirebaseFirestore.instance.collection('users').doc(doc.id).update({
-      'name': nameController.text,
-      'emailAddress': emailAddressController.text,
-      // Update other fields as well
-    }).then((value) {
-      print("Document updated");
-      Navigator.pop(context); // Close the dialog
-    }).catchError((error) {
-      print("Error updating document: $error");
-    });
-  },
-  child: const Text("Update"),
-)
 
-    ],
-
+void updateUsernameAndPass(DocumentSnapshot doc) {
+  final nameController = TextEditingController(text: doc['name']);
+  final emailAddressController = TextEditingController(text: doc['emailAddress']);
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Update"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const Text("Name:"),
+                Expanded(child: CustomTextField(textFieldController: nameController)),
+              ],
+            ),
+            Row(
+              children: [
+                const Text("Email:"),
+                Expanded(child: CustomTextField(textFieldController: emailAddressController)),
+              ],
+            )
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              // Update the document in Firestore
+              FirebaseFirestore.instance.collection('users').doc(doc.id).update({
+                'name': nameController.text,
+                'emailAddress': emailAddressController.text,
+                // Update other fields as well
+              }).then((value) {
+                print("Document updated");
+                Navigator.pop(context); // Close the dialog
+              }).catchError((error) {
+                print("Error updating document: $error");
+              });
+              setState(() {});
+            },
+            child: const Text("Update"),
+          ),
+        ],
+      );
+    },
   );
-},);
-
-
 }
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +126,14 @@ Row(
                              emailAddress.text=doc['emailAddress'];
                           updateUsernameAndPass(doc);
                            }, icon: const Icon(Icons.edit)),
-                          IconButton(onPressed: (){}, icon: const Icon(Icons.delete)),
+                          IconButton(onPressed: (){
+                             FirebaseFirestore.instance.collection('users').doc(doc.id).delete().then((value) => ScaffoldMessenger.of(context).showSnackBar(
+   SnackBar(
+    content: Text("${doc['name']} deleted Successfully"),
+    duration: const Duration(seconds: 2), // Adjust the duration as needed
+  ),
+));
+                          }, icon: const Icon(Icons.delete)),
                           
                         ],
                       ),
