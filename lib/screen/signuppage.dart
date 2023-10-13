@@ -1,5 +1,7 @@
+// ignore_for_file: avoid_print
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_practice/functions/firebasefunction.dart';
 import 'package:firebase_practice/screen/loginpage.dart';
 import 'package:firebase_practice/widgets/buttonwidget.dart';
 import 'package:firebase_practice/widgets/textfieldwidget.dart';
@@ -21,38 +23,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
    TextEditingController name =TextEditingController();
    TextEditingController userName =TextEditingController();
 
-  late FireBaseFunction firebaseFunction;
-
-  @override
-  void initState() {
-    firebaseFunction = FireBaseFunction(emailAddress.text, password.text, name.text, userName.text);
-    super.initState();
-  }
   
-
-  @override
-  void dispose() {
-    emailAddress.dispose();
-    password.dispose();
-    name.dispose();
-    userName.dispose();
-    super.dispose();
+  void addUsers(){
+    FirebaseFirestore.instance.collection("users").add(
+      {
+        "name" : name.text,
+        "password" : password.text,
+    "userName" : userName.text,
+    "emailAddress" : emailAddress.text
+      }
+    ).then((value) => print("Added")).onError((error, stackTrace) => print("error"));
   }
 
-  void addUserToFirestore() {
-    // Update the values in the FireBaseFunction instance
-    firebaseFunction.email = emailAddress.text;
-    firebaseFunction.password = password.text;
-    firebaseFunction.name = name.text;
-    firebaseFunction.address = userName.text;
 
-    // Call the addUser method to add a new user to Firestore
-    firebaseFunction.addUser().then((_) {
-      print('User added successfully');
-    }).catchError((error) {
-      print('Failed to add user: $error');
-    });
-  }
 
  Future registerUser() async {
   if (isAgree == false) {
@@ -75,6 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     email: emailAddress.text,
     password: password.text,
   );
+  addUsers();
   // ignore: use_build_context_synchronously
   showDialog(context: context, builder: (context) {
     return AlertDialog(
@@ -113,7 +97,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
       );
 } catch (e) {
-  // ignore: avoid_print
   print(e);
 
 }
@@ -193,8 +176,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               children: [
                                 InkWell(
                       onTap: () {
-                       addUserToFirestore();
-                       // registerUser();
+                      
+                        registerUser();
                       },
                       child: CustomButtonWidget( bgColor: Colors.black, textMessage: "Create Account", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.5,)),
                             
