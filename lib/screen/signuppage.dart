@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     email: emailAddress.text,
     password: password.text,
   );
-   FirebaseFirestore.instance.collection("users").add(
+   FirebaseFirestore.instance.collection("users").doc( credential.user!.uid).set(
       {
         "id" : credential.user!.uid,
         "name" : name.text,

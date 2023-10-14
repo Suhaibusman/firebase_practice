@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practice/screen/homepage.dart';
 import 'package:firebase_practice/screen/signuppage.dart';
@@ -36,7 +37,7 @@ Future<UserCredential?> signInWithGoogle() async {
        // ignore: use_build_context_synchronously
        Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage(userNames: '',)),
         );
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
@@ -57,12 +58,26 @@ Future<UserCredential?> signInWithGoogle() async {
               email: emailAddress.text, password: password.text);
 
       if (userCredential.user != null) {
-        // ignore: use_build_context_synchronously
+      // Fetch the user's data from Firestore based on their email
+      final user = userCredential.user;
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .where('emailAddress', isEqualTo: user!.email)
+          .get();
+
+      if (userDoc.docs.isNotEmpty) {
+        final userData = userDoc.docs.first.data() as Map<String, dynamic>;
+        final userName = userData['name'];
+
+        // Navigate to the homepage and pass the user's name
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(
+            builder: (context) => HomePage(userNames: userName),
+          ),
         );
       }
+    }
     } on FirebaseAuthException catch (e) {
       String errorMessage = "An error occurred";
 
@@ -97,7 +112,7 @@ Future<UserCredential?> signInWithGoogle() async {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child:  Scaffold(
+      child: Scaffold(
         resizeToAvoidBottomInset : false,
         body: Container(
            height: MediaQuery.of(context).size.height,
@@ -107,7 +122,7 @@ Future<UserCredential?> signInWithGoogle() async {
           image: AssetImage("assets/images/loginScreenImage.png"),
           fit: BoxFit.cover,
         ),
-    
+      
         ),
           child: SizedBox(
             child: Column(
@@ -179,7 +194,7 @@ Future<UserCredential?> signInWithGoogle() async {
                           );
                         },
                         child: const TextWidget(textMessage: "Sign up", textColor: Colors.black, textSize: 20),
-
+    
                       ),
                        const SizedBox(height: 50,),
                         ],

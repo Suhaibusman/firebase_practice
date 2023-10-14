@@ -7,7 +7,8 @@ import 'package:firebase_practice/widgets/textfieldwidget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final String? userNames;
+  const HomePage({Key? key,  this.userNames}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -23,23 +24,30 @@ class _HomePageState extends State<HomePage> {
    TextEditingController name =TextEditingController();
    TextEditingController userName =TextEditingController();
 Future<void> addTask(String userId) async {
-  final userDocRef = FirebaseFirestore.instance.collection("user").doc(userId);
+  final userDocRef = FirebaseFirestore.instance.collection("users").doc(userId);
+
+  // Check if the user document exists
   final userDocSnapshot = await userDocRef.get();
 
   if (userDocSnapshot.exists) {
-    // The user document exists, so you can add a task to it.
-    final tasksCollection = userDocRef.collection("tasks");
+    // The user document exists, so you can add a task to the "todos" collection.
+    final todosCollection = userDocRef.collection("todos");
+
+    // Create a map with the to-do item data
     final taskData = {
-      "name": "name.text",
+      "name": 
+      "name.text",
       "password": "password.text",
       "userName": "userName.text",
-      "emailAddress": "emailAddress.text",
+      "emailAddress": "emailAddress.text"
+      ,
     };
 
-    tasksCollection.add(taskData).then((value) {
-      print("Task added for user: $userId");
+    // Add the to-do item to the "todos" collection
+    todosCollection.add(taskData).then((value) {
+      print("To-do item added for user: $userId");
     }).catchError((error) {
-      print("Error adding task: $error");
+      print("Error adding to-do item: $error");
     });
   } else {
     print("User document with ID $userId does not exist.");
@@ -98,71 +106,75 @@ void updateUsernameAndPass(DocumentSnapshot doc) {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              // Implement your image pick logic here
-            },
-            child: const Text("Pick Image"),
-          ),
-          TextButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
-            },
-            child: const Text("Sign out"),
-          ),
-          StreamBuilder(
-            stream: usersStream,
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot doc = snapshot.data!.docs[index];
-                      return ListTile(
-                        title: Text(doc['name']),
-                        subtitle: Text(doc['emailAddress']),
-                      trailing:  Row(
-                       mainAxisSize: MainAxisSize.min,
-                        children: [
-                           IconButton(onPressed: (){
-                            name.text=doc['name'];
-                             emailAddress.text=doc['emailAddress'];
-                          updateUsernameAndPass(doc);
-                           }, icon: const Icon(Icons.edit)),
-                          IconButton(onPressed: (){
-                             FirebaseFirestore.instance.collection('users').doc(doc.id).delete().then((value) => ScaffoldMessenger.of(context).showSnackBar(
-   SnackBar(
-    content: Text("${doc['name']} deleted Successfully"),
-    duration: const Duration(seconds: 2), // Adjust the duration as needed
-  ),
-));
-                          }, icon: const Icon(Icons.delete)),
-                          
-                        ],
-                      ),
-                      );
-                    },
-                  ),
-                );
-              } else {
-                return const Text("No data available");
-              }
-            },
-          ),
-          FloatingActionButton(onPressed: (){
-            addTask(userId);
-          }, child: const Icon(Icons.add),)
-        ],
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+    
+            Text(widget.userNames ??"unknown"),
+            TextButton(
+              onPressed: () {
+                // Implement your image pick logic here
+              },
+              child: const Text("Pick Image"),
+            ),
+            TextButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()));
+              },
+              child: const Text("Sign out"),
+            ),
+            StreamBuilder(
+              stream: usersStream,
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot doc = snapshot.data!.docs[index];
+                        return ListTile(
+                          title: Text(doc['name']),
+                          subtitle: Text(doc['emailAddress']),
+                        trailing:  Row(
+                         mainAxisSize: MainAxisSize.min,
+                          children: [
+                             IconButton(onPressed: (){
+                              name.text=doc['name'];
+                               emailAddress.text=doc['emailAddress'];
+                            updateUsernameAndPass(doc);
+                             }, icon: const Icon(Icons.edit)),
+                            IconButton(onPressed: (){
+                               FirebaseFirestore.instance.collection('users').doc(doc.id).delete().then((value) => ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(
+      content: Text("${doc['name']} deleted Successfully"),
+      duration: const Duration(seconds: 2), // Adjust the duration as needed
+      ),
+    ));
+                            }, icon: const Icon(Icons.delete)),
+                            
+                          ],
+                        ),
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return const Text("No data available");
+                }
+              },
+            ),
+            FloatingActionButton(onPressed: (){
+              addTask(userId);
+            }, child: const Icon(Icons.add),)
+          ],
+        ),
       ),
     );
   }
