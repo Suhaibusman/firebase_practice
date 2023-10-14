@@ -1,4 +1,5 @@
 
+import 'package:firebase_practice/screen/loginpage.dart';
 import 'package:firebase_practice/screen/signuppage.dart';
 import 'package:firebase_practice/widgets/buttonwidget.dart';
 import 'package:firebase_practice/widgets/textwidget.dart';
@@ -55,11 +56,15 @@ class _SplashScreenState extends State<SplashScreen> {
                     },
                     child: CustomButtonWidget( bgColor: Colors.black, textMessage: "Sign up", textColor: Colors.white, textSize: 20, buttonWidth: MediaQuery.of(context).size.width*0.7,)),
                 const SizedBox(height: 10,),
-                const Row(
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextWidget(textMessage: "Already Have an Account?", textColor: Colors.white, textSize: 15),
-                TextWidget(textMessage: "Login", textColor: Colors.black, textSize: 15),
+                const TextWidget(textMessage: "Already Have an Account?", textColor: Colors.white, textSize: 15),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+                  },
+                  child: const TextWidget(textMessage: "Login", textColor: Colors.black, textSize: 15)),
               ],
             )
                 ],
